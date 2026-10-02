@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мини-диагностика — МедУправа</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+
+  :root {
+    --blue-deep: #0A2E4F;
+    --blue: #1B4B7A;
+    --turquoise: #14B8A6;
+    --sky: #38BDF8;
+    --white: #FFFFFF;
+    --bg: #F5FAFD;
+    --bg-card: #FFFFFF;
+    --text-dark: #0A2E4F;
+    --text-mid: #2C5570;
+    --text-soft: #6489A3;
+    --radius-xl: 32px;
+    --radius-md: 22px;
+    --radius-pill: 100px;
+    --shadow-soft: 0 10px 30px -14px rgba(10, 46, 79, 0.15), 0 4px 14px rgba(10, 46, 79, 0.05);
+    --gradient-title: linear-gradient(120deg, #0A2E4F 0%, #1B4B7A 35%, #14B8A6 70%, #38BDF8 100%);
+    --gradient-accent: linear-gradient(135deg, #14B8A6 0%, #38BDF8 100%);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 2.5rem 1.2rem 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .quiz {
+    max-width: 780px;
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2.2rem 2.8rem;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quiz::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: var(--gradient-accent);
+  }
+
+  .quiz-badge {
+    display: inline-block;
+    background: rgba(20, 184, 166, 0.12);
+    color: #0E6B70;
+    padding: 0.4rem 1.1rem;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid rgba(20, 184, 166, 0.25);
+    margin-bottom: 1.2rem;
+  }
+
+  .quiz h1 {
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+    background: var(--gradient-title);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 0.7rem;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  .quiz-sub {
+    color: var(--text-mid);
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .progress {
+    height: 8px;
+    background: #E8F1F5;
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gradient-accent);
+    width: 0%;
+    transition: width 0.35s ease;
+    border-radius: 100px;
+  }
+
+  .progress-text {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  .question { display: none; animation: fadeIn 0.35s ease; }
+  .question.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question h2 {
+    font-size: 1.25rem;
+    color: var(--blue-deep);
+    margin-bottom: 1.4rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 0.8rem; }
+
+  .option {
+    background: #F7FBFD;
+    border: 1.5px solid rgba(20, 184, 166, 0.15);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 1.02rem;
+    color: var(--text-mid);
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-weight: 500;
+    text-align: left;
+    line-height: 1.45;
+  }
+
+  .option:hover {
+    border-color: var(--turquoise);
+    background: #FFFFFF;
+    transform: translateX(4px);
+    box-shadow: 0 10px 22px -12px rgba(20, 184, 166, 0.45);
+  }
+
+  .option.selected {
+    background: var(--gradient-accent);
+    color: var(--white);
+    border-color: transparent;
+    box-shadow: 0 14px 26px -12px rgba(20, 184, 166, 0.7);
+  }
+
+  .option .radio {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(20, 184, 166, 0.5);
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.25s ease;
+  }
+
+  .option.selected .radio {
+    border-color: var(--white);
+    background: var(--white);
+  }
+
+  .option.selected .radio::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--turquoise);
+  }
+
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.2rem;
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--gradient-accent);
+    color: var(--white);
+    font-weight: 700;
+    padding: 0.9rem 1.9rem;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 14px 26px -12px rgba(20, 184, 166, 0.7);
+    letter-spacing: 0.2px;
+    font-family: inherit;
+  }
+
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid rgba(20, 184, 166, 0.3);
+    box-shadow: none;
+  }
+
+  .btn-ghost:hover { background: rgba(20, 184, 166, 0.08); transform: none; }
+
+  .result { display: none; }
+  .result.active { display: block; animation: fadeIn 0.4s ease; }
+
+  .result-head { text-align: center; margin-bottom: 1.6rem; }
+
+  .result-icon {
+    width: 78px; height: 78px;
+    border-radius: 50%;
+    background: var(--gradient-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem;
+    margin: 0 auto 1.4rem;
+    box-shadow: 0 18px 30px -14px rgba(20, 184, 166, 0.7);
+    color: var(--white);
+  }
+
+  .result h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: var(--blue-deep);
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .result-text {
+    color: var(--text-mid);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 620px;
+    margin: 0 auto 1.6rem;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .result-highlight {
+    background: rgba(20, 184, 166, 0.1);
+    border-left: 4px solid var(--turquoise);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    color: var(--blue-deep);
+    font-weight: 600;
+    margin: 1.2rem 0 1.8rem;
+    text-align: left;
+    line-height: 1.6;
+  }
+
+  .lead-form {
+    background: #F7FBFD;
+    border: 1.5px dashed rgba(20, 184, 166, 0.35);
+    border-radius: var(--radius-md);
+    padding: 1.6rem 1.5rem;
+    margin: 1.8rem 0;
+    text-align: left;
+  }
+
+  .lead-form h3 {
+    font-size: 1.1rem;
+    color: var(--blue-deep);
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 800;
+  }
+
+  .lead-form input {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border-radius: 14px;
+    border: 1.5px solid rgba(20, 184, 166, 0.3);
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: var(--white);
+    transition: all 0.2s;
+  }
+
+  .lead-form input:focus {
+    outline: none;
+    border-color: var(--turquoise);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+  }
+
+  .lead-form button { width: 100%; margin-top: 0.4rem; }
+
+  .lead-note {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    text-align: center;
+    margin-top: 0.7rem;
+    line-height: 1.5;
+  }
+
+  .form-success {
+    color: var(--turquoise);
+    font-weight: 700;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1.05rem;
+  }
+
+  .result-buttons {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 560px) {
+    .quiz { padding: 1.8rem 1.4rem 2rem; }
+    .nav-buttons { flex-direction: column-reverse; }
+    .btn { width: 100%; text-align: center; }
+    .result-buttons { flex-direction: column; }
+    .quiz-sub, .result-text { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz">
+
+  <div class="quiz-badge">Мини-диагностика • МедУправа</div>
+  <h1>Какой специалист нужен вашей клинике сейчас?</h1>
+  <p class="quiz-sub">Ответьте на несколько коротких вопросов о клинике и её текущих задачах. Это займёт не более 2 минут. Без обязательств по дальнейшему сотрудничеству.</p>
+
+  <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">Вопрос 1 из 4</div>
+
+  <div class="question active" data-q="1">
+    <h2>1. Есть ли у клиники актуальная юридическая база?</h2>
+    <div class="options">
+      <div class="option" data-score="legal"><span class="radio"></span> Лицензия, договоры и документы требуют проверки</div>
+      <div class="option" data-score="marketing"><span class="radio"></span> Юридические вопросы не беспокоят, но есть задачи по привлечению пациентов</div>
+      <div class="option" data-score="finance"><span class="radio"></span> Юридическая база в порядке, беспокоит финансовая сторона</div>
+      <div class="option" data-score="none"><span class="radio"></span> Всё в порядке, хочу проверить комплексно</div>
+    </div>
+  </div>
+
+  <div class="question" data-q="2">
+    <h2>2. Понятно ли, откуда приходят пациенты?</h2>
+    <div class="options">
+      <div class="option" data-score="marketing"><span class="radio"></span> Нет, источники обращений и путь пациента не отслеживаются</div>
+      <div class="option" data-score="finance"><span class="radio"></span> Частично, но непонятно, какие направления реально приносят прибыль</div>
+      <div class="option" data-score="legal"><span class="radio"></span> Привлечение не проблема, есть вопросы к оформлению претензий пациентов</div>
+      <div class="option" data-score="none"><span class="radio"></span> Да, маркетинг и финансы прозрачны</div>
+    </div>
+  </div>
+
+  <div class="question" data-q="3">
+    <h2>3. Что сейчас вызывает наибольшую тревогу?</h2>
+    <div class="options">
+      <div class="option" data-score="legal"><span class="radio"></span> Проверки, претензии пациентов, оформление документов</div>
+      <div class="option" data-score="marketing"><span class="radio"></span> Мало обращений, слабая работа администраторов, непонятный маркетинг</div>
+      <div class="option" data-score="finance"><span class="radio"></span> Расходы растут, прибыль непредсказуема, нет финансовой картины</div>
+      <div class="option" data-score="none"><span class="radio"></span> Тревоги нет, хочу системно усилить все три направления</div>
+    </div>
+  </div>
+
+  <div class="question" data-q="4">
+    <h2>4. Готовы ли вы работать с внешней командой?</h2>
+    <div class="options">
+      <div class="option" data-score="legal"><span class="radio"></span> Да, но пока нужен только один узкий специалист</div>
+      <div class="option" data-score="marketing"><span class="radio"></span> Да, рассматриваю комбинацию из двух специалистов</div>
+      <div class="option" data-score="finance"><span class="radio"></span> Да, интересует комплекс из трёх специалистов</div>
+      <div class="option" data-score="none"><span class="radio"></span> Хочу сначала получить рекомендации по итогам диагностики</div>
+    </div>
+  </div>
+
+  <div class="nav-buttons" id="navButtons">
+    <button class="btn btn-ghost" id="backBtn" disabled>← Назад</button>
+    <button class="btn" id="nextBtn" disabled>Далее →</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-head">
+      <div class="result-icon">✓</div>
+      <h2 id="resultTitle">Спасибо за ответы!</h2>
+    </div>
+    <p class="result-text" id="resultText"></p>
+    <div class="result-highlight" id="resultHighlight"></div>
+
+    <!-- FORMSPREE FORM: endpoint уже вставлен -->
+    <form
+      class="lead-form"
+      id="leadForm"
+      action="https://formspree.io/f/xppwgkoz"
+      method="POST"
+    >
+      <h3>Оставьте заявку — эксперт свяжется с вами</h3>
+
+      <input type="text" name="name" placeholder="Ваше имя" required>
+      <input type="tel" name="phone" placeholder="Телефон" required>
+      <input type="text" name="clinic" placeholder="Название клиники">
+
+      <!-- Скрытые поля — заполняются автоматически -->
+      <input type="hidden" name="source" id="formSource">
+      <input type="hidden" name="result" id="formResult">
+      <input type="hidden" name="answers" id="formAnswers">
+      <input type="hidden" name="_subject" value="Новая заявка — МедУправа (диагностика)">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+      <button type="submit" class="btn">Отправить заявку</button>
+      <p class="lead-note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+    </form>
+
+    <div class="result-buttons">
+      <a href="index.html" class="btn btn-ghost">← Вернуться на главную</a>
+    </div>
+  </div>
+
+  <input type="hidden" id="quizSource" value="direct">
+
+</div>
+
+<script>
+  /* ---------- Чтение source из URL ---------- */
+  const params = new URLSearchParams(window.location.search);
+  const sourceParam = params.get('source') || 'direct';
+  document.getElementById('quizSource').value = sourceParam;
+
+  const sourceLabels = {
+    'acute-pain': 'Лечение «острой боли» (1 эксперт)',
+    'combo': 'Комбинированная терапия (2 эксперта)',
+    'full': 'Комплексное лечение (3 эксперта)',
+    'direct': 'Прямой заход'
+  };
+
+  /* ---------- Логика квиза ---------- */
+  const questions = document.querySelectorAll('.question');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+  const navButtons = document.getElementById('navButtons');
+  const resultBlock = document.getElementById('result');
+  const total = questions.length;
+
+  let current = 0;
+  const answers = {};
+
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const parent = opt.closest('.question');
+      const qIndex = parent.dataset.q;
+      parent.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      answers[qIndex] = opt.dataset.score;
+      nextBtn.disabled = false;
+    });
+  });
+
+  function updateProgress() {
+    const percent = ((current + 1) / total) * 100;
+    progressFill.style.width = percent + '%';
+    progressText.textContent = `Вопрос ${current + 1} из ${total}`;
+    backBtn.disabled = current === 0;
+    nextBtn.textContent = current === total - 1 ? 'Показать результат' : 'Далее →';
+    nextBtn.disabled = !answers[current + 1];
+  }
+
+  function showQuestion(index) {
+    questions.forEach(q => q.classList.remove('active'));
+    questions[index].classList.add('active');
+    current = index;
+    updateProgress();
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (current < total - 1) {
+      showQuestion(current + 1);
+    } else {
+      showResult();
+    }
+  });
+
+  backBtn.addEventListener('click', () => {
+    if (current > 0) showQuestion(current - 1);
+  });
+
+  function showResult() {
+    const scores = { legal: 0, marketing: 0, finance: 0, none: 0 };
+    Object.values(answers).forEach(s => scores[s] = (scores[s] || 0) + 1);
+
+    const ranked = ['legal', 'marketing', 'finance']
+      .map(key => ({ key, value: scores[key] }))
+      .sort((a, b) => b.value - a.value);
+
+    const top = ranked[0];
+
+    const titles = {
+      legal: 'Вам в первую очередь нужен Юрист',
+      marketing: 'Вам в первую очередь нужен Маркетолог',
+      finance: 'Вам в первую очередь нужен Финансовый директор',
+      none: 'Рекомендуем комплексный формат сопровождения'
+    };
+    const texts = {
+      legal: 'По вашим ответам видно, что основные риски сосредоточены в юридической плоскости. Документы, лицензия, претензии пациентов и проверки — это то, что требует внимания в первую очередь.',
+      marketing: 'По вашим ответам видно, что ключевая точка роста — маркетинг и клиентский контур. Разберём, откуда приходят обращения, как проходит путь пациента и как работают администраторы.',
+      finance: 'По вашим ответам видно, что главный фокус — финансовое управление. Разберём, куда уходят деньги, сколько зарабатывает клиника и какие направления приносят прибыль.',
+      none: 'Судя по ответам, у клиники нет ярко выраженной болевой точки — значит, есть смысл усилить сразу несколько направлений. Рекомендуем рассмотреть комплекс из трёх специалистов.'
+    };
+
+    const isComplex = scores.none >= 2 || (ranked[0].value === ranked[1].value);
+    const finalTitle = isComplex ? titles.none : titles[top.key];
+    const finalText  = isComplex ? texts.none  : texts[top.key];
+
+    document.getElementById('resultTitle').textContent = finalTitle;
+    document.getElementById('resultText').textContent  = finalText;
+
+    const highlightMap = {
+      legal: 'Рекомендуемый первый шаг: подключить юриста для аудита документов и оценки рисков.',
+      marketing: 'Рекомендуемый первый шаг: подключить маркетолога для анализа обращений и пути пациента.',
+      finance: 'Рекомендуемый первый шаг: подключить финансового директора для анализа расходов и прибыли.',
+      none: 'Рекомендуемый первый шаг: назначить консультацию для подбора комплексного формата.'
+    };
+    document.getElementById('resultHighlight').textContent =
+      isComplex ? highlightMap.none : highlightMap[top.key];
+
+    // Заполняем скрытые поля формы
+    document.getElementById('formSource').value =
+      sourceLabels[document.getElementById('quizSource').value] || document.getElementById('quizSource').value;
+    document.getElementById('formResult').value = finalTitle;
+    document.getElementById('formAnswers').value = JSON.stringify(answers);
+
+    questions.forEach(q => q.classList.remove('active'));
+    document.querySelector('.progress').style.display = 'none';
+    progressText.style.display = 'none';
+    navButtons.style.display = 'none';
+    resultBlock.classList.add('active');
+  }
+
+  /* ---------- Обработка отправки формы через AJAX (без перезагрузки) ---------- */
+  const leadForm = document.getElementById('leadForm');
+  leadForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = leadForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправляем...';
+
+    try {
+      const response = await fetch(leadForm.action, {
+        method: 'POST',
+        body: new FormData(leadForm),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        leadForm.innerHTML = '<p class="form-success">✓ Спасибо! Мы свяжемся с вами в ближайшее время.</p>';
+      } else {
+        throw new Error('Ошибка отправки');
+      }
+    } catch (err) {
+      // На случай проблем с сетью или блокировки — показываем резервное сообщение
+      alert('Не удалось отправить заявку. Пожалуйста, свяжитесь с нами по телефону.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Отправить заявку';
+    }
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>

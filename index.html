@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>МедУправа — юрист, маркетолог и финансовый директор</title>
+<style>
+  /* ---------- СБРОС И ПЕРЕМЕННЫЕ ---------- */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  :root {
+    /* Гамма из 4 цветов: синий, бирюза, голубой, белый */
+    --blue-deep: #0A2E4F;
+    --blue: #1B4B7A;
+    --turquoise: #14B8A6;
+    --sky: #38BDF8;
+    --white: #FFFFFF;
+
+    --bg: #F5FAFD;
+    --bg-card: #FFFFFF;
+
+    --text-dark: #0A2E4F;
+    --text-mid: #2C5570;
+    --text-soft: #6489A3;
+
+    --radius-xl: 32px;
+    --radius-md: 22px;
+    --radius-pill: 100px;
+
+    --shadow-soft: 0 10px 30px -14px rgba(10, 46, 79, 0.15), 0 4px 14px rgba(10, 46, 79, 0.05);
+    --shadow-hover: 0 32px 55px -22px rgba(20, 184, 166, 0.45), 0 0 0 1px rgba(20, 184, 166, 0.25);
+
+    --gradient-title: linear-gradient(120deg, #0A2E4F 0%, #1B4B7A 35%, #14B8A6 70%, #38BDF8 100%);
+    --gradient-accent: linear-gradient(135deg, #14B8A6 0%, #38BDF8 100%);
+    --gradient-primary: linear-gradient(135deg, #0A2E4F 0%, #1B4B7A 55%, #14B8A6 100%);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+    padding: 2.5rem 1.4rem 4rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* ---------- ТИПОГРАФИКА ---------- */
+  h1, h2, h3, h4 {
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .justify-text {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    color: var(--text-mid);
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+
+  /* ---------- ХЕДЕР + ГРАДИЕНТНЫЙ ЗАГОЛОВОК ---------- */
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 1rem 0;
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    background: var(--gradient-title);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    opacity: 0.94;
+    filter: drop-shadow(0 2px 8px rgba(20, 184, 166, 0.08));
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+  }
+
+  .hero-sub {
+    font-size: clamp(1.1rem, 2.1vw, 1.35rem);
+    color: var(--text-mid);
+    font-weight: 500;
+    max-width: 780px;
+    margin: 0 auto 1.6rem;
+    text-align: center;
+  }
+
+  .hero-formula {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 0.9rem;
+    background: var(--white);
+    padding: 0.9rem 1.6rem;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(20, 184, 166, 0.15);
+    font-weight: 600;
+    color: var(--blue-deep);
+    font-size: 0.98rem;
+  }
+
+  .hero-formula .step {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+  }
+
+  .hero-formula .arrow {
+    color: var(--turquoise);
+    font-weight: 800;
+  }
+
+  .hero-formula .eq {
+    color: var(--sky);
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+
+  /* ---------- ЗАГОЛОВКИ СЕКЦИЙ ---------- */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3.5rem 0 1.8rem;
+  }
+
+  .section-head .bar {
+    width: 6px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--gradient-accent);
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--blue-deep);
+  }
+
+  /* ---------- БЛОКИ ДИАГНОЗОВ С АНИМАЦИЕЙ ---------- */
+  .diagnosis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.6rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .diagnosis-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 2rem 1.9rem 2.2rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(20, 184, 166, 0.08);
+    transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .diagnosis-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: var(--gradient-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .diagnosis-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(20, 184, 166, 0.3);
+  }
+
+  .diagnosis-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .diagnosis-card h3 {
+    font-size: 1.55rem;
+    color: var(--blue-deep);
+    margin-bottom: 0.4rem;
+  }
+
+  .diagnosis-role {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--turquoise);
+    background: rgba(20, 184, 166, 0.1);
+    padding: 0.3rem 0.9rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 1.2rem;
+    border: 1px solid rgba(20, 184, 166, 0.2);
+    width: fit-content;
+  }
+
+  .diagnosis-question {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--blue-deep);
+    margin-bottom: 0.9rem;
+  }
+
+  .diagnosis-card p {
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.65;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    margin-bottom: 1.4rem;
+  }
+
+  .diagnosis-card p strong {
+    color: var(--blue-deep);
+    font-weight: 700;
+  }
+
+  .diagnosis-cta {
+    margin-top: auto;
+    padding-top: 1.2rem;
+    border-top: 1px dashed rgba(20, 184, 166, 0.2);
+  }
+
+  .diagnosis-cta p {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    text-align: left;
+  }
+
+  .btn {
+    display: inline-block;
+    background: var(--gradient-accent);
+    color: var(--white);
+    font-weight: 700;
+    padding: 0.85rem 1.7rem;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    font-size: 0.95rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 14px 26px -12px rgba(20, 184, 166, 0.7);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.06);
+    box-shadow: 0 20px 30px -12px rgba(20, 184, 166, 0.85);
+  }
+
+  .btn-full { display: block; width: 100%; }
+
+  /* ---------- ФОРМАТЫ СОПРОВОЖДЕНИЯ ---------- */
+  .format-block {
+    border-radius: var(--radius-xl);
+    padding: 2.4rem 2.2rem;
+    margin-bottom: 1.6rem;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .format-block:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .format-block.acute {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0FAFB 100%);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-left: 6px solid var(--sky);
+  }
+
+  .format-block.combo {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0FAFB 100%);
+    border: 1px solid rgba(20, 184, 166, 0.2);
+    border-left: 6px solid var(--turquoise);
+  }
+
+  .format-block.full {
+    background: var(--gradient-primary);
+    color: var(--white);
+    border: none;
+  }
+
+  .format-block.full::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -80px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .format-block h3 {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    margin-bottom: 0.8rem;
+    color: var(--blue-deep);
+    position: relative;
+    z-index: 1;
+  }
+
+  .format-block.full h3 {
+    color: var(--white);
+  }
+
+  .format-block h4 {
+    font-size: 1rem;
+    color: var(--turquoise);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .format-block.full h4 {
+    color: #6EE7D0;
+  }
+
+  .format-sub {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    font-weight: 500;
+    margin-bottom: 1.4rem;
+    max-width: 800px;
+    text-align: justify;
+    text-justify: inter-word;
+    position: relative;
+    z-index: 1;
+  }
+
+  .format-block.full .format-sub {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .problem-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .problem-list li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(6px);
+    padding: 0.9rem 1.2rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    font-size: 1rem;
+    color: var(--text-mid);
+    transition: all 0.3s ease;
+  }
+
+  .problem-list li:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateX(4px);
+    box-shadow: 0 10px 22px -12px rgba(20, 184, 166, 0.4);
+  }
+
+  .problem-list li strong {
+    color: var(--blue-deep);
+    font-weight: 700;
+  }
+
+  .problem-dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 7px;
+    background: var(--gradient-accent);
+  }
+
+  .format-block.full .problem-list li {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .format-block.full .problem-list li strong {
+    color: #6EE7D0;
+  }
+
+  .format-block.full .problem-list li:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .format-block.full .problem-dot {
+    background: linear-gradient(135deg, #6EE7D0, #14B8A6);
+  }
+
+  .format-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.4rem;
+    margin-top: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .format-cta-text {
+    font-size: 1rem;
+    color: var(--text-mid);
+    font-weight: 500;
+    max-width: 480px;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+
+  .format-block.full .format-cta-text {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* ---------- ФОРМА ЗАЯВКИ В КП ---------- */
+  .lead-section {
+    background: var(--gradient-primary);
+    border-radius: var(--radius-xl);
+    padding: 2.8rem 2.4rem;
+    margin: 3rem 0;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -20px rgba(10, 46, 79, 0.5);
+  }
+
+  .lead-section::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -80px;
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .lead-section h3 {
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    margin-bottom: 0.6rem;
+    position: relative;
+    z-index: 1;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--white);
+  }
+
+  .lead-section .lead-sub {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.05rem;
+    margin-bottom: 1.8rem;
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .lead-section form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    max-width: 720px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .lead-section form input {
+    padding: 1rem 1.3rem;
+    border-radius: 16px;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    color: var(--white);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.25s;
+    width: 100%;
+  }
+
+  .lead-section form input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lead-section form input:focus {
+    outline: none;
+    border-color: var(--turquoise);
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.25);
+  }
+
+  .lead-section form button {
+    grid-column: 1 / -1;
+    margin-top: 0.6rem;
+    padding: 1.1rem 2rem;
+    border-radius: 60px;
+    border: none;
+    background: linear-gradient(135deg, #6EE7D0, #14B8A6);
+    color: #0A2E4F;
+    font-weight: 800;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+    font-family: inherit;
+    box-shadow: 0 18px 30px -14px rgba(20, 184, 166, 0.85);
+  }
+
+  .lead-section form button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+  }
+
+  .lead-section form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .lead-note {
+    grid-column: 1 / -1;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-top: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .lead-success {
+    grid-column: 1 / -1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(110, 231, 208, 0.4);
+    border-radius: var(--radius-md);
+    padding: 1.4rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #6EE7D0;
+  }
+
+  /* ---------- ШАГИ ОТ ПРОБЛЕМЫ К РЕШЕНИЮ ---------- */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.4rem;
+    margin-bottom: 3rem;
+  }
+
+  .step-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 1.8rem 1.6rem;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(20, 184, 166, 0.08);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(20, 184, 166, 0.3);
+  }
+
+  .step-number {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.04em;
+  }
+
+  .step-card h4 {
+    font-size: 0.95rem;
+    color: var(--blue-deep);
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 800;
+  }
+
+  .step-card p {
+    color: var(--text-soft);
+    font-size: 1rem;
+    line-height: 1.6;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+
+  .step-card p strong {
+    color: var(--blue-deep);
+  }
+
+  /* ---------- КОНТАКТЫ ---------- */
+  .contacts-block {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2.3rem;
+    box-shadow: var(--shadow-soft);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.8rem;
+    margin: 1.2rem 0 2rem;
+    border: 1px solid rgba(20, 184, 166, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contacts-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: var(--gradient-accent);
+  }
+
+  .contact-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .contact-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--text-soft);
+    font-weight: 700;
+  }
+
+  .contact-value {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--blue-deep);
+    text-decoration: none;
+    border-bottom: 2px dashed rgba(20, 184, 166, 0.3);
+    padding-bottom: 0.35rem;
+    word-break: break-word;
+    transition: all 0.25s ease;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .contact-value:hover {
+    color: var(--turquoise);
+    border-bottom-color: var(--turquoise);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- ФИНАЛЬНЫЙ ПОСЫЛ ---------- */
+  .final-message {
+    text-align: center;
+    margin-top: 2.5rem;
+    padding: 2.5rem 2rem;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-xl);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -20px rgba(10, 46, 79, 0.5);
+  }
+
+  .final-message::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .final-message p {
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.5;
+    max-width: 780px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .final-message p span {
+    background: linear-gradient(135deg, #6EE7D0, #38BDF8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ---------- АДАПТИВНОСТЬ ---------- */
+  @media (max-width: 900px) {
+    body { padding: 2rem 1rem 3rem; }
+    .format-block { padding: 2rem 1.6rem; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-formula { font-size: 0.85rem; padding: 0.7rem 1.1rem; }
+    .diagnosis-card { padding: 1.7rem 1.5rem; }
+    .format-block { padding: 1.8rem 1.4rem; }
+    .contacts-block { padding: 1.8rem 1.4rem; grid-template-columns: 1fr; gap: 1.2rem; }
+    .btn { width: 100%; }
+    .format-cta-row { flex-direction: column; align-items: stretch; }
+    .lead-section { padding: 2rem 1.5rem; }
+    .lead-section form { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .justify-text,
+    .diagnosis-card p,
+    .format-sub,
+    .step-card p { text-align: left; hyphens: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- ХЕДЕР -->
+  <header class="hero">
+    <h1 class="hero-title">МедУправа</h1>
+    <p class="hero-sub">Юрист, маркетолог и финансовый директор — без необходимости нанимать специалистов в штат.</p>
+    <div class="hero-formula">
+      <span>Чек-ап</span><span class="arrow">→</span>
+      <span>Лечение</span><span class="arrow">→</span>
+      <span>Профилактика</span>
+      <span class="eq">=</span>
+      <span class="step">Диагностика</span><span class="arrow">→</span>
+      <span class="step">Экспертиза</span><span class="arrow">→</span>
+      <span class="step">Управление</span>
+    </div>
+  </header>
+
+  <!-- ТРИ ДИАГНОЗА -->
+  <div class="diagnosis-grid">
+
+    <!-- ГИПОКСИЯ ДЕНЕГ -->
+    <div class="diagnosis-card">
+      <h3>ГИПОКСИЯ ДЕНЕГ</h3>
+      <span class="diagnosis-role">Финансовый директор</span>
+      <div class="diagnosis-question">Где деньги?</div>
+      <p>Выручка есть, а свободных средств постоянно не хватает — <strong>непонятно, куда они уходят</strong>. Какие услуги действительно приносят прибыль, а какие <strong>съедают её</strong>? Собственник не всегда видит реальную картину. Расходы растут, возникают кассовые разрывы — <strong>и финансовые решения приходится принимать вслепую</strong>.</p>
+      <div class="diagnosis-cta">
+        <p>Сначала диагноз — потом лечение.</p>
+        <p>Оставьте заявку — финансовый директор свяжется с вами.</p>
+        <a href="#leadSection" class="btn btn-full" data-source="Гипоксия денег — финансовый директор">Оставить заявку →</a>
+      </div>
+    </div>
+
+    <!-- ПРАВОВОЙ ИММУНОДЕФИЦИТ -->
+    <div class="diagnosis-card">
+      <h3>ПРАВОВОЙ ИММУНОДЕФИЦИТ</h3>
+      <span class="diagnosis-role">Юрист</span>
+      <div class="diagnosis-question">Всё ли в клинике под контролем?</div>
+      <p>Документы устарели или оформлены с ошибками — <strong>любая проверка может выявить то, что годами оставалось без внимания</strong>. Лицензия, сотрудники, договоры с пациентами — <strong>одна ошибка может обернуться штрафом, ограничениями или дополнительными расходами</strong>. Поступила претензия пациента — <strong>и вместо работы клиника вынуждена срочно разбираться с юридической проблемой</strong>.</p>
+      <div class="diagnosis-cta">
+        <p>Сначала диагноз — потом лечение.</p>
+        <p>Оставьте заявку — юрист свяжется с вами.</p>
+        <a href="#leadSection" class="btn btn-full" data-source="Правовой иммунодефицит — юрист">Оставить заявку →</a>
+      </div>
+    </div>
+
+    <!-- МАРКЕТИНГОВАЯ АРИТМИЯ -->
+    <div class="diagnosis-card">
+      <h3>МАРКЕТИНГОВАЯ АРИТМИЯ</h3>
+      <span class="diagnosis-role">Маркетолог</span>
+      <div class="diagnosis-question">Где пациенты?</div>
+      <p>Реклама работает, деньги на продвижение уходят, а <strong>стабильного потока новых пациентов нет</strong>. Обращения есть, но часть пациентов <strong>не доходит до записи или не возвращается в клинику</strong> — и деньги теряются на каждом этапе. Собственник не понимает, <strong>что действительно приводит пациентов, а за что клиника платит впустую</strong> — маркетинг сложно оценить по результату.</p>
+      <div class="diagnosis-cta">
+        <p>Сначала диагноз — потом лечение.</p>
+        <p>Оставьте заявку — маркетолог свяжется с вами.</p>
+        <a href="#leadSection" class="btn btn-full" data-source="Маркетинговая аритмия — маркетолог">Оставить заявку →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ФОРМАТЫ СОПРОВОЖДЕНИЯ -->
+  <div class="section-head">
+    <span class="bar"></span>
+    <h2>ВЫБЕРИТЕ ФОРМАТ СОПРОВОЖДЕНИЯ</h2>
+  </div>
+
+  <!-- ФОРМАТ 1 -->
+  <div class="format-block acute">
+    <h3>ЛЕЧЕНИЕ «ОСТРОЙ БОЛИ»</h3>
+    <p class="format-sub">Один эксперт под конкретную задачу клиники.</p>
+    <ul class="problem-list">
+      <li><span class="problem-dot"></span><div><strong>Финансы:</strong> деньги есть, а прибыли не видно.</div></li>
+      <li><span class="problem-dot"></span><div><strong>Юридические риски:</strong> документы, лицензия, претензии, проверки.</div></li>
+      <li><span class="problem-dot"></span><div><strong>Маркетинг:</strong> реклама есть, стабильного потока пациентов нет.</div></li>
+    </ul>
+    <div class="format-cta-row">
+      <p class="format-cta-text"><strong>Не знаете, с чего начать? Пройдите бесплатную диагностику.</strong> Узнайте, <strong>какая «острая боль» есть у вашей клиники и какой эксперт нужен сейчас.</strong></p>
+      <a href="diagnostic.html?source=acute-pain" class="btn">Пройти бесплатную диагностику →</a>
+    </div>
+  </div>
+
+  <!-- ФОРМАТ 2 -->
+  <div class="format-block combo">
+    <h3>КОМБИНИРОВАННАЯ ТЕРАПИЯ</h3>
+    <p class="format-sub">Два эксперта работают вместе над взаимосвязанными задачами клиники.</p>
+    <ul class="problem-list">
+      <li><span class="problem-dot"></span><div><strong>Финансовый директор + Юрист</strong> → <strong>понимаете, где клиника теряет деньги и какие проблемы с документами и проверками нужно решить.</strong></div></li>
+      <li><span class="problem-dot"></span><div><strong>Финансовый директор + Маркетолог</strong> → <strong>понимаете, откуда приходят пациенты, сколько стоит их привлечение и какие направления приносят клинике прибыль.</strong></div></li>
+      <li><span class="problem-dot"></span><div><strong>Юрист + Маркетолог</strong> → <strong>выстраиваете работу с пациентами и рекламой с учётом требований к работе с персональными данными.</strong></div></li>
+    </ul>
+    <div class="format-cta-row">
+      <p class="format-cta-text"><strong>Хотите понять, какие две проблемы сейчас сильнее всего влияют на вашу клинику?</strong> <strong>Пройдите бесплатную диагностику и получите рекомендации, с чего начать.</strong></p>
+      <a href="diagnostic.html?source=combo" class="btn">Пройти бесплатную диагностику →</a>
+    </div>
+  </div>
+
+  <!-- ФОРМАТ 3 -->
+  <div class="format-block full">
+    <h3>КОМПЛЕКСНОЕ ЛЕЧЕНИЕ</h3>
+    <h4>ТРИ НАПРАВЛЕНИЯ — ЕДИНЫЙ ПЛАН ЛЕЧЕНИЯ</h4>
+    <ul class="problem-list">
+      <li><span class="problem-dot"></span><div><strong>Финансовый директор + Юрист + Маркетолог</strong> → <strong>понимаете, куда уходят деньги, где клиника рискует получить проблемы и почему не хватает пациентов.</strong></div></li>
+    </ul>
+    <div class="format-cta-row">
+      <p class="format-cta-text"><strong>Проверьте, нужна ли вашей клинике помощь трёх экспертов.</strong> Пройдите бесплатную диагностику и выявите <strong>острые проблемы в финансах, праве и маркетинге.</strong></p>
+      <a href="diagnostic.html?source=full" class="btn" style="background: linear-gradient(135deg, #6EE7D0, #14B8A6); color:#0A2E4F;">Пройти бесплатную диагностику →</a>
+    </div>
+  </div>
+
+  <!-- ФОРМА ЗАЯВКИ -->
+  <section class="lead-section" id="leadSection">
+    <h3>Оставьте заявку</h3>
+    <p class="lead-sub">Эксперт свяжется с вами, обсудим задачи клиники и определим, с чего начать.</p>
+
+    <form
+      id="leadForm"
+      action="https://formspree.io/f/xppwgkoz"
+      method="POST"
+    >
+      <input type="text" name="name" placeholder="Ваше имя" required>
+      <input type="tel" name="phone" placeholder="Телефон" required>
+      <input type="text" name="clinic" placeholder="Название клиники" style="grid-column: 1 / -1;">
+      <input type="text" name="comment" placeholder="Комментарий (необязательно)" style="grid-column: 1 / -1;">
+
+      <input type="hidden" name="source" id="formSource" value="КП — общая форма">
+      <input type="hidden" name="_subject" value="Новая заявка — МедУправа (КП)">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+      <button type="submit">Оставить заявку →</button>
+      <p class="lead-note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+    </form>
+  </section>
+
+  <!-- ОТ ПРОБЛЕМЫ К РЕШЕНИЮ -->
+  <div class="section-head">
+    <span class="bar"></span>
+    <h2>ОТ ПРОБЛЕМЫ — К РЕШЕНИЮ</h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">01</div>
+      <h4>КОНСУЛЬТАЦИЯ</h4>
+      <p>Понимаем задачи и цели собственника.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">02</div>
+      <h4>ДИАГНОСТИКА</h4>
+      <p>Выявляем проблемы, которые влияют на деньги, безопасность и поток пациентов.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">03</div>
+      <h4>ПРЕДЛОЖЕНИЕ</h4>
+      <p>Определяем, какое лечение необходимо клинике: <strong>финансовое, юридическое или маркетинговое</strong> — и кто из экспертов его проведёт.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">04</div>
+      <h4>ДЕЙСТВИЕ</h4>
+      <p>Подключаем специалистов и начинаем решать выявленные <strong>задачи</strong>.</p>
+    </div>
+  </div>
+
+  <!-- КОНТАКТЫ -->
+  <p class="justify-text" style="margin-bottom: 1.2rem; font-weight: 600; color: var(--blue-deep);">Свяжитесь с нами — обсудим задачи вашей клиники и определим, с чего начать.</p>
+  <div class="contacts-block">
+    <div class="contact-item">
+      <span class="contact-label">Телефон</span>
+      <a href="tel:+79835725011"
+         class="contact-value"
+         id="phoneReveal"
+         data-revealed="false"
+         onclick="revealPhone(event)">Показать телефон</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">Telegram</span>
+      <a href="https://t.me/DariaVl_krsk" target="_blank" rel="noopener" class="contact-value">Написать в Telegram</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">MAX</span>
+      <a href="https://max.ru/u/f9LHodD0cOKRQTkDlvCmmWbL0Q-FOo91puPGWNS5hAuH_LQLzEMUc0DQQIE" target="_blank" rel="noopener" class="contact-value">Написать в MAX</a>
+    </div>
+    <div class="contact-item">
+      <span class="contact-label">Сайт</span>
+      <a href="https://neuro-1726043.clients.site/" target="_blank" rel="noopener" class="contact-value">neuro-1726043.clients.site</a>
+    </div>
+  </div>
+
+  <!-- ФИНАЛЬНЫЙ ПОСЫЛ -->
+  <div class="final-message">
+    <p>Вы управляете бизнесом. <span>Мы лечим проблемы, которые мешают ему расти.</span></p>
+  </div>
+
+</div>
+
+<script>
+  /* ---------- Плавный скролл к форме + подстановка источника ---------- */
+  document.querySelectorAll('[data-source]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const source = link.dataset.source;
+      const sourceField = document.getElementById('formSource');
+      if (sourceField) sourceField.value = source;
+
+      document.getElementById('leadSection').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  });
+
+  /* ---------- Раскрытие телефона ---------- */
+  function revealPhone(e) {
+    e.preventDefault();
+    const el = document.getElementById('phoneReveal');
+    if (el.dataset.revealed === 'false') {
+      el.textContent = '+7 983 572-50-11';
+      el.dataset.revealed = 'true';
+      el.setAttribute('href', 'tel:+79835725011');
+    } else {
+      window.location.href = 'tel:+79835725011';
+    }
+  }
+
+  /* ---------- AJAX-отправка формы в Formspree ---------- */
+  const leadForm = document.getElementById('leadForm');
+  if (leadForm) {
+    leadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = leadForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Отправляем...';
+
+      try {
+        const response = await fetch(leadForm.action, {
+          method: 'POST',
+          body: new FormData(leadForm),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          leadForm.innerHTML = '<div class="lead-success">✓ Спасибо! Мы свяжемся с вами в ближайшее время.</div>';
+        } else {
+          throw new Error('Ошибка отправки');
+        }
+      } catch (err) {
+        alert('Не удалось отправить заявку. Пожалуйста, свяжитесь с нами по телефону.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Оставить заявку →';
+      }
+    });
+  }
+</script>
+</body>
+</html>
